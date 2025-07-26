@@ -43,7 +43,7 @@ class CuentaCorriente(CuentaBancaria):
 
     def retirar(self, cantidad):                                        #modifico método que ya existía.
         if cantidad> self.saldo + self.limite_descubierto:
-            print("Excede el límite desubierto.")
+            print("Excede el límite descubierto.")
         elif cantidad <=0:
             print("Cantidad inválida para retirar.")
         else:
