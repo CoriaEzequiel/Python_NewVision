@@ -48,7 +48,7 @@ def get_movie(id:int):                   # para imprimir el valor id debemos ind
 
 
 
-@app.get('/movies/', tags=['Movies'])       #ya no filtro por id (/movies/ esta va tener parámetros query)
+@app.get('/movies', tags=['Movies'])       #ya no filtro por id (/movies/ esta va tener parámetros query)
 def get_movie_by_category(category:str, year:int):      # defino param por query, es añadiendo dentro de la f()
              
     for movie in movies:
@@ -74,3 +74,34 @@ def create_movie(                     #datos que voy a recibir al endpoint(con m
       'rating': rating,
       'category': category  
     })
+
+
+#Update
+@app.put('/movies/{id}', tags=['Movies'])  
+def update_movie(
+           id: int,                       
+           title: str = Body(),
+           overview: str = Body(),
+           year: int = Body(),
+           rating: float = Body(),
+           category: str = Body()
+):   
+    for movie in movies:            #si agrego comas aquí(,) se crean tuplas.
+        if movie['id'] == id:
+            movie['title'] = title
+            movie['overview'] = overview
+            movie['year'] = year
+            movie['rating'] = rating
+            movie['category'] = category        
+            return movie
+    return {"error": "Movie not found"}
+
+
+
+@app.delete('/movies/{id}', tags=['Movies'])
+def delete_movie(id: int):  # id tomado de la ruta
+    for movie in movies:
+        if movie['id'] == id:
+            movies.remove(movie)
+            return movies                    # devuelvo lista actualizada
+    return {"error": "Movie not found"}    
