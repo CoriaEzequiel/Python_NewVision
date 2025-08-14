@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 from fastapi.responses import HTMLResponse
 
 app = FastAPI() #instancia de FastAPI
@@ -31,7 +31,7 @@ movies = [          #lista de diccionarios
 #    return "Welcome" #respuesta string
 
 
-@app.get('/movies', tags=['Home'])
+@app.get('/movies', tags=['Movies'])
 def get_movies():
     return movies
    # return {"Hello":"world"} #respuesta diccionario
@@ -39,7 +39,7 @@ def get_movies():
     
 
 #PARAMETROS DE RUTA: valores que puedo pasar dentro de la URL
-@app.get('/movies/{id}', tags=['Home'])
+@app.get('/movies/{id}', tags=['Movies'])
 def get_movie(id:int):                   # para imprimir el valor id debemos indicarlo también dentro de la f(añadirlo como parámetro)
     for movie in movies:
         if movie['id'] == id:
@@ -48,10 +48,29 @@ def get_movie(id:int):                   # para imprimir el valor id debemos ind
 
 
 
-@app.get('/movies/', tags=['Home'])       #ya no filtro por id (/movies/ esta va tener parámetros query)
+@app.get('/movies/', tags=['Movies'])       #ya no filtro por id (/movies/ esta va tener parámetros query)
 def get_movie_by_category(category:str, year:int):      # defino param por query, es añadiendo dentro de la f()
              
     for movie in movies:
         if movie['category'] == category:
             return movie
     return[]
+
+
+@app.post('/movies', tags=['Movies']) #accedo a los datos que quiero insertar en mi listado de pelis
+def create_movie(                     #datos que voy a recibir al endpoint(con metodo post)
+    id:int = Body(),
+    title: str = Body(),
+    overview:str = Body(),
+    year:int = Body(),
+    rating:float = Body(),
+    category:str = Body()
+    ):             
+    movies.append({                 #parametros dentro de f() != ruta -> son tomados como parámetros querys
+      'id': id,
+      'title': title,
+      'overview': overview,
+      'year': year,
+      'rating': rating,
+      'category': category  
+    })
